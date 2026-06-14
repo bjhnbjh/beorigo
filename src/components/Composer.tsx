@@ -45,9 +45,8 @@ export default function Composer({ onToss }: Props) {
   }
 
   return (
-    <div className="composer-sticky">
-      <div className="wrap">
-        <div className="composer">
+    <div className="wrap">
+      <div className="composer">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -87,7 +86,6 @@ export default function Composer({ onToss }: Props) {
             </button>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );

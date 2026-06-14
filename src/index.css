@@ -28,8 +28,7 @@ header h1 .fade{background:linear-gradient(100deg,var(--apricot),var(--gold),var
 header p{color:var(--text-mute);font-size:.96rem;margin-top:14px;}
 
 /* composer */
-.composer-sticky{position:sticky;top:0;z-index:20;padding:14px 0;}
-.composer{margin:0 auto;max-width:560px;background:rgba(48,38,70,0.96);border:1px solid var(--card-line);border-radius:22px;padding:22px;backdrop-filter:blur(12px);position:relative;}
+.composer{margin:30px auto 0;max-width:560px;background:var(--card);border:1px solid var(--card-line);border-radius:22px;padding:22px;backdrop-filter:blur(8px);position:relative;}
 .composer textarea{width:100%;background:transparent;border:none;outline:none;resize:none;color:var(--text);
   font-family:var(--serif);font-size:1.12rem;line-height:1.7;min-height:84px;}
 .composer textarea::placeholder{color:var(--text-faint);}
