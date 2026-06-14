@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# build artifacts
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# 브랜드 캐릭터 소재(대용량 미디어) — 코드 저장소에서 제외
+characters/
+
+# env
+.env
+.env.*
+!.env.example
+
+# editor / os
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
