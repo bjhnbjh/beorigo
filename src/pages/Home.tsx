@@ -34,7 +34,8 @@ export default function Home() {
       setError(false);
       const data = await fetchTosses();
       setTosses(data);
-    } catch {
+    } catch (e) {
+      console.error('[fetchTosses 실패]', e);
       setError(true);
     } finally {
       setLoading(false);
@@ -64,7 +65,8 @@ export default function Home() {
       addMine(saved.id);
       setMine(getMine());
       setTosses((prev) => [saved, ...prev]);
-    } catch {
+    } catch (e) {
+      console.error('[addToss 실패]', e);
       setError(true);
     }
   }
