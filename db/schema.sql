@@ -51,6 +51,14 @@ create policy "tosses_insert"
 --   → 운영자 삭제는 Supabase 대시보드(Table Editor)에서 직접 수행
 --     (대시보드는 service_role이라 RLS를 우회하여 삭제 가능)
 
+-- ------------------------------------------------------------
+-- 3. 테이블 권한(GRANT) — 필수
+--    RLS 정책이 있어도 역할(anon)에 테이블 GRANT가 없으면
+--    "permission denied for table tosses" (42501) 에러가 남.
+--    SQL Editor로 테이블을 직접 만들면 자동 GRANT가 빠질 수 있어 명시.
+-- ------------------------------------------------------------
+grant select, insert on public.tosses to anon, authenticated;
+
 -- ============================================================
 -- 끝. 이후 .env(또는 .env.local) 에 아래 두 값을 채우면 앱이 자동 연결됩니다.
 --   NEXT_PUBLIC_SUPABASE_URL=...              (Project Settings → API → Project URL)

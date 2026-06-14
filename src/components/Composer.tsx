@@ -31,11 +31,12 @@ export default function Composer({ onToss }: Props) {
   function handleToss() {
     const value = text.trim();
     if (!value) return;
+    if (!selCat) return;
     if (!canToss()) {
       setWait(Math.ceil(remainingMs() / 1000));
       return;
     }
-    onToss(value, selCat ?? 'emo', isPublic);
+    onToss(value, selCat, isPublic);
     markTossed();
     setText('');
     setSelCat(null);
@@ -79,7 +80,7 @@ export default function Composer({ onToss }: Props) {
               type="button"
               className="toss-btn"
               onClick={handleToss}
-              disabled={!text.trim() || wait > 0}
+              disabled={!text.trim() || !selCat || wait > 0}
             >
               {wait > 0 ? `${wait}초 후` : '버리기'}
             </button>
