@@ -15,7 +15,7 @@ interface Props {
 export default function Composer({ onToss }: Props) {
   const [text, setText] = useState('');
   const [selCat, setSelCat] = useState<Category | null>(null);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true); // 기본값: 공개로 버리기(익명)
   const [wait, setWait] = useState(0); // 쿨다운 남은 초
 
   // 쿨다운 카운트다운
@@ -40,13 +40,14 @@ export default function Composer({ onToss }: Props) {
     markTossed();
     setText('');
     setSelCat(null);
-    setIsPublic(false);
+    setIsPublic(true); // 등록 후에도 기본값은 공개 유지
     setWait(Math.ceil(remainingMs() / 1000));
   }
 
   return (
-    <div className="wrap">
-      <div className="composer">
+    <div className="composer-sticky">
+      <div className="wrap">
+        <div className="composer">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -86,6 +87,7 @@ export default function Composer({ onToss }: Props) {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

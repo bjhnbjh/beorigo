@@ -9,15 +9,22 @@
 -- ============================================================
 
 -- ------------------------------------------------------------
--- 1. 테이블: 공개로 버린 글만 저장 (비공개는 DB에 안 들어옴)
---    is_public 컬럼이 없는 이유: 비공개 글은 애초에 insert하지 않음
+-- 1. 테이블: 공개·비공개 글 모두 저장
+--    is_public = true  → 공개 피드에 노출
+--    is_public = false → DB에 저장만 (RLS상 anon은 조회 불가, 본인 보관용)
 -- ------------------------------------------------------------
 create table if not exists public.tosses (
   id          uuid        primary key default gen_random_uuid(),
   text        text        not null check (char_length(text) between 1 and 400),
   category    text        not null check (category in ('emo','work','need')),
+  is_public   boolean     not null default true,
   created_at  timestamptz not null default now()
 );
+
+-- 기존 테이블에 컬럼이 없으면 추가 (이미 운영 중인 DB용)
+--   기존 행들은 모두 공개 글이었으므로 default true로 백필됨
+alter table public.tosses
+  add column if not exists is_public boolean not null default true;
 
 -- 최신순 조회용 인덱스 (피드: created_at desc limit 50)
 create index if not exists tosses_created_idx
@@ -29,12 +36,12 @@ create index if not exists tosses_created_idx
 -- ------------------------------------------------------------
 alter table public.tosses enable row level security;
 
--- 읽기: 누구나 가능 (익명 공개 피드)
+-- 읽기: 공개 글만 누구나 조회 가능 (비공개 글은 anon에게 보이지 않음)
 drop policy if exists "tosses_read" on public.tosses;
 create policy "tosses_read"
   on public.tosses
   for select
-  using (true);
+  using (is_public = true);
 
 -- 쓰기: 누구나 가능하되, 길이/카테고리 조건을 만족할 때만
 drop policy if exists "tosses_insert" on public.tosses;
@@ -64,3 +71,15 @@ grant select, insert on public.tosses to anon, authenticated;
 --   NEXT_PUBLIC_SUPABASE_URL=...              (Project Settings → API → Project URL)
 --   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...  (Project Settings → API → publishable key)
 -- ============================================================
+
+-- 이거 비공개 글도 db에 저장하는 방식
+-- 1) is_public 컬럼 추가 (기존 공개 글은 default true로 백필)
+alter table public.tosses
+  add column if not exists is_public boolean not null default true;
+
+-- 2) 읽기 정책: 공개 글만 노출되도록 변경
+drop policy if exists "tosses_read" on public.tosses;
+create policy "tosses_read"
+  on public.tosses
+  for select
+  using (is_public = true);
